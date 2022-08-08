@@ -1,0 +1,140 @@
+<!--  наследуемся от шаблона default.html, который мы создавали для flatpages -->
+{% extends 'flatpages/default.html' %}
+
+{% load custom_filters %}
+
+{# Импортируем модуль с нашим тегом #}
+{% load custom_tags %}
+
+<!-- Название у нас будет posts -->
+{% block title %}
+Posts
+{% endblock title %}
+
+<!-- В контенте на странице мы выводим все новости -->
+{% block content %}
+    <h1>Все публикации</h1>
+
+    {# Добавляем форму, которая объединяет набор полей, которые будут отправляться в запросе #}
+    <form action="" method="get">
+        <div class="row">
+            <div class="col">
+                <label for="post_title">Название:</label>
+                <input type="text" class="form-control" id="post_title" name="post_title__contains">
+                <br />
+            </div>
+<!--        </div>-->
+<!--        <div class="form-group">-->
+            <div class="col-6">
+                <label for="post_text">Описание:</label>
+                <input type="text" class="form-control" id="post_text" name="post_text__contains">
+                <br />
+            </div>
+<!--        </div>-->
+<!--        <div class="form-group">-->
+            <div class="col">
+                <label for="post_creation">Дата публикации:</label>
+                <input type="date" class="form-control" id="post_creation" name="post_creation__gt">
+                <br />
+            </div>
+            {% if flatpage.title == "Новости" %}
+                <input type="hidden" name="post_type__contains" value="NS">
+            {% elif flatpage.title == "Статьи" %}
+                <input type="hidden" name="post_type__contains" value="AC">
+            {% else %}
+
+            {% endif %}
+            <div class="col">
+                <label for="search"></label>
+                <input type="submit" class="form-control" id="search" value="Найти">
+                <br />
+            </div>
+        </div>
+<!--        {# Добавим кнопку отправки данных формы #}-->
+<!--        <input type="submit" value="Найти" />-->
+    </form>
+    <h3>{{ time_now|date:'d M Y' }}</h3>
+    <h3>Количество всех новостей {{ posts|length }}</h3>
+    <h3> {{ next_news|default_if_none:"Чуть позже сообщим о новостях!" }} </h3>
+
+    {% if posts %}
+        <table class="table table-primary">
+            <thead>
+                <th>Название</th>
+                <th>Описание</th>
+                <th>Дата публикации</th>
+            </thead>
+            <tbody>
+                {% for post in posts %}
+                <tr>
+                    <td>{{ post.post_title|abusive }}</td>
+                    <td>{{ post.post_text|truncatechars:20|abusive }}</td>
+                    <td>{{ post.post_creation|date:'d M Y' }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <h2>Новостей нет!</h2>
+    {% endif %}
+    {# Добавляем пагинацию на страницу #}
+
+    {# Информация о предыдущих страницах #}
+    {% if page_obj.has_previous %}
+    <a href="?{% url_replace page=1 %}">1</a>
+        {% if page_obj.previous_page_number != 1 %}
+            ...
+            <a href="?{% url_replace page=page_obj.previous_page_number %}">{{ page_obj.previous_page_number }}</a>
+        {% endif %}
+    {% endif %}
+
+    {# Информация о текущей странице #}
+    {{ page_obj.number }}
+
+    {# Информация о следующих страницах #}
+    {% if page_obj.has_next %}
+        <a href="?{% url_replace page=page_obj.next_page_number %}">{{ page_obj.next_page_number }}</a>
+        {% if paginator.num_pages != page_obj.next_page_number %}
+            ...
+            <a href="?{% url_replace page=page_obj.paginator.num_pages %}">{{ page_obj.paginator.num_pages }}</a>
+        {% endif %}
+    {% endif %}
+<br />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</br>
+{% endblock content %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

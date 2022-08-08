@@ -1,0 +1,35 @@
+<!--  наследуемся от шаблона default.html, который мы создавали для flatpages -->
+{% extends 'flatpages/default.html' %}
+
+{% load custom_filters %}
+
+<!-- Название у нас будет Post -->
+{% block title %}
+Post
+{% endblock title %}
+
+<!-- В контенте на странице мы выводим все новости -->
+{% block content %}
+    <h1>Новость {{ post.pk }}</h1>
+    {% if post.pk %}
+    <table class="table table-primary">
+        <thead>
+            <th>Название</th>
+            <th>Дата публикации</th>
+            <th>Описание</th>
+        </thead>
+        <tbody>
+        <tr>
+            <td>{{ post.post_title }}</td>
+            <td>{{ post.post_creation|date:'d M Y' }}</td>
+            <td>{{ post.post_text|abusive }}</td>
+        </tr>
+        </tbody>
+    </table>
+    {% else %}
+        <!-- Если новости нет, говорим, что новости нет ;) -->
+        <h2>Новостей нет!</h2>
+    {% endif %}
+{% endblock content %}
+
+
